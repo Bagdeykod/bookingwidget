@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Админ — Записи</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #f5f1e8;
+      --surface: #fffdf8;
+      --ink: #22252b;
+      --ink-muted: #6b6a63;
+      --stamp: #b3432b;
+      --stamp-hover: #963823;
+      --gold: #c9a227;
+      --success: #6b8f71;
+      --border-dash: rgba(34, 37, 43, 0.15);
+      --radius-top: 4px;
+      --transition: 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+
+    body {
+      min-height: 100vh;
+      padding: 32px 20px 48px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .page-header {
+      margin-bottom: 28px;
+      text-align: center;
+    }
+
+    .page-header h1 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-variation-settings: 'opsz' 72;
+      font-size: clamp(1.75rem, 4vw, 2.25rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    .page-header p {
+      font-size: 0.9375rem;
+      color: var(--ink-muted);
+    }
+
+    .card {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid rgba(34, 37, 43, 0.08);
+      border-radius: var(--radius-top) var(--radius-top) 0 0;
+      padding: 28px 24px 36px;
+      box-shadow:
+        0 2px 8px rgba(34, 37, 43, 0.04),
+        0 8px 32px rgba(34, 37, 43, 0.06);
+      transition: transform var(--transition);
+    }
+
+    .card:hover {
+      transform: rotate(0.35deg);
+    }
+
+    .card::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -10px;
+      height: 20px;
+      background:
+        radial-gradient(circle at 10px 10px, var(--bg) 6px, transparent 6px),
+        var(--surface);
+      background-size: 20px 20px;
+      background-position: -10px 0;
+      border-top: 1px dashed var(--border-dash);
+    }
+
+    .login-form {
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--ink-muted);
+      margin-bottom: 8px;
+    }
+
+    input[type="password"],
+    input[type="text"] {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 1rem;
+      font-family: 'Space Mono', monospace;
+      color: var(--ink);
+      background: var(--bg);
+      border: 1px solid rgba(34, 37, 43, 0.12);
+      border-radius: 4px;
+      outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.2);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 20px;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      font-family: inherit;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 2px;
+    }
+
+    .btn-primary {
+      width: 100%;
+      color: #fff;
+      background: var(--stamp);
+    }
+
+    .btn-primary:hover {
+      background: var(--stamp-hover);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.985);
+    }
+
+    .btn-danger {
+      color: var(--stamp);
+      background: transparent;
+      border: 1px solid rgba(179, 67, 43, 0.35);
+      padding: 6px 12px;
+      font-size: 0.8125rem;
+    }
+
+    .btn-danger:hover:not(:disabled) {
+      background: rgba(179, 67, 43, 0.08);
+    }
+
+    .btn-danger:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-logout {
+      color: var(--ink-muted);
+      background: transparent;
+      border: 1px dashed var(--border-dash);
+      font-size: 0.8125rem;
+      padding: 8px 14px;
+    }
+
+    .btn-logout:hover {
+      color: var(--ink);
+      border-color: rgba(34, 37, 43, 0.25);
+    }
+
+    .alert {
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      font-size: 0.875rem;
+      border-radius: 4px;
+      border-left: 3px solid var(--stamp);
+      background: rgba(179, 67, 43, 0.08);
+      color: var(--stamp);
+    }
+
+    .alert.hidden {
+      display: none;
+    }
+
+    .dashboard-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px dashed var(--border-dash);
+    }
+
+    .dashboard-header h2 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-variation-settings: 'opsz' 48;
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .stats {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+      align-items: flex-end;
+    }
+
+    .filters .form-group {
+      margin-bottom: 0;
+      flex: 1;
+      min-width: 140px;
+    }
+
+    .filters input[type="date"] {
+      font-family: 'Space Mono', monospace;
+      padding: 10px 12px;
+      font-size: 0.875rem;
+      color: var(--ink);
+      background: var(--bg);
+      border: 1px solid rgba(34, 37, 43, 0.12);
+      border-radius: 4px;
+      width: 100%;
+    }
+
+    .filters input[type="date"]:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.2);
+    }
+
+    .btn-filter {
+      color: var(--ink);
+      background: var(--bg);
+      border: 1px solid rgba(34, 37, 43, 0.12);
+      white-space: nowrap;
+    }
+
+    .btn-filter:hover {
+      border-color: var(--gold);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    thead th {
+      text-align: left;
+      padding: 10px 12px;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-muted);
+      border-bottom: 2px solid var(--gold);
+      white-space: nowrap;
+    }
+
+    tbody td {
+      padding: 14px 12px;
+      border-bottom: 1px dashed var(--border-dash);
+      vertical-align: middle;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .mono {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8125rem;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 3px 8px;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-radius: 3px;
+    }
+
+    .status-new {
+      color: var(--success);
+      background: rgba(107, 143, 113, 0.12);
+      border: 1px solid rgba(107, 143, 113, 0.25);
+    }
+
+    .status-cancelled {
+      color: var(--ink-muted);
+      background: rgba(107, 106, 99, 0.1);
+      border: 1px solid rgba(107, 106, 99, 0.2);
+      text-decoration: line-through;
+    }
+
+    tr.row-past {
+      opacity: 0.55;
+    }
+
+    tr.row-past td {
+      color: var(--ink-muted);
+    }
+
+    tr.row-today {
+      background: rgba(201, 162, 39, 0.06);
+    }
+
+    tr.row-today td:first-child {
+      border-left: 3px solid var(--gold);
+    }
+
+    tr.row-cancelled td:not(:last-child) {
+      text-decoration: line-through;
+      color: var(--ink-muted);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--ink-muted);
+    }
+
+    .empty-state p {
+      font-size: 0.9375rem;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: var(--ink-muted);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.875rem;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .date-group td {
+      padding: 8px 12px 6px;
+      font-family: 'Fraunces', Georgia, serif;
+      font-variation-settings: 'opsz' 36;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--ink-muted);
+      background: var(--bg);
+      border-bottom: 1px solid rgba(34, 37, 43, 0.06);
+    }
+
+    .date-group td.today-label {
+      color: var(--stamp);
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 20px 12px 40px;
+      }
+
+      .card {
+        padding: 20px 16px 32px;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tbody tr {
+        display: block;
+        margin-bottom: 16px;
+        padding: 14px;
+        background: var(--bg);
+        border-radius: 4px;
+        border: 1px dashed var(--border-dash);
+      }
+
+      tbody tr.row-today {
+        border-left: 3px solid var(--gold);
+      }
+
+      tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 0;
+        border-bottom: none;
+        gap: 12px;
+      }
+
+      tbody td::before {
+        content: attr(data-label);
+        font-size: 0.6875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--ink-muted);
+        flex-shrink: 0;
+      }
+
+      tbody td:last-child {
+        justify-content: flex-end;
+        padding-top: 10px;
+        margin-top: 4px;
+        border-top: 1px dashed var(--border-dash);
+      }
+
+      tbody td:last-child::before {
+        display: none;
+      }
+
+      .date-group {
+        display: block;
+        margin: 20px 0 8px;
+      }
+
+      .date-group td {
+        display: block;
+        border-radius: 4px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card:hover {
+        transform: none;
+      }
+
+      .btn:active {
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="page-header">
+      <h1>Журнал записей</h1>
+      <p>Панель управления для владельца</p>
+    </header>
+
+    <div class="card">
+      <!-- Форма входа -->
+      <section id="loginSection" class="login-form">
+        <div id="loginError" class="alert hidden" role="alert">Неверный токен</div>
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="adminToken">Токен доступа</label>
+            <input type="password" id="adminToken" autocomplete="off" placeholder="Введите ADMIN_TOKEN" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Войти</button>
+        </form>
+      </section>
+
+      <!-- Панель записей -->
+      <section id="dashboardSection" class="hidden">
+        <div class="dashboard-header">
+          <div>
+            <h2>Все записи</h2>
+            <p class="stats" id="statsText"></p>
+          </div>
+          <button type="button" class="btn btn-logout" id="btnLogout">Выйти</button>
+        </div>
+
+        <div class="filters">
+          <div class="form-group">
+            <label for="filterFrom">С</label>
+            <input type="date" id="filterFrom">
+          </div>
+          <div class="form-group">
+            <label for="filterTo">По</label>
+            <input type="date" id="filterTo">
+          </div>
+          <button type="button" class="btn btn-filter" id="btnFilter">Применить</button>
+          <button type="button" class="btn btn-filter" id="btnResetFilter">Сбросить</button>
+        </div>
+
+        <div id="loadingState" class="loading hidden">Загрузка...</div>
+        <div id="emptyState" class="empty-state hidden">
+          <p>Записей пока нет</p>
+        </div>
+
+        <div class="table-wrap">
+          <table id="bookingsTable" class="hidden">
+            <thead>
+              <tr>
+                <th>Дата</th>
+                <th>Время</th>
+                <th>Услуга</th>
+                <th>Имя</th>
+                <th>Telegram</th>
+                <th>Статус</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="bookingsBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'admin_token';
+
+    const loginSection = document.getElementById('loginSection');
+    const dashboardSection = document.getElementById('dashboardSection');
+    const loginForm = document.getElementById('loginForm');
+    const loginError = document.getElementById('loginError');
+    const adminTokenInput = document.getElementById('adminToken');
+    const btnLogout = document.getElementById('btnLogout');
+    const bookingsTable = document.getElementById('bookingsTable');
+    const bookingsBody = document.getElementById('bookingsBody');
+    const loadingState = document.getElementById('loadingState');
+    const emptyState = document.getElementById('emptyState');
+    const statsText = document.getElementById('statsText');
+    const filterFrom = document.getElementById('filterFrom');
+    const filterTo = document.getElementById('filterTo');
+    const btnFilter = document.getElementById('btnFilter');
+    const btnResetFilter = document.getElementById('btnResetFilter');
+
+    function getToken() {
+      return sessionStorage.getItem(STORAGE_KEY) || '';
+    }
+
+    function setToken(token) {
+      sessionStorage.setItem(STORAGE_KEY, token);
+    }
+
+    function clearToken() {
+      sessionStorage.removeItem(STORAGE_KEY);
+    }
+
+    function showLogin(showError) {
+      loginSection.classList.remove('hidden');
+      dashboardSection.classList.add('hidden');
+      loginError.classList.toggle('hidden', !showError);
+      adminTokenInput.value = '';
+      adminTokenInput.focus();
+    }
+
+    function showDashboard() {
+      loginSection.classList.add('hidden');
+      dashboardSection.classList.remove('hidden');
+      loginError.classList.add('hidden');
+    }
+
+    function authHeaders() {
+      return { Authorization: 'Bearer ' + getToken() };
+    }
+
+    function formatDateLabel(dateStr) {
+      const date = new Date(dateStr + 'T00:00:00');
+      return date.toLocaleDateString('ru-RU', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      });
+    }
+
+    function isToday(dateStr) {
+      const today = new Date().toISOString().split('T')[0];
+      return dateStr === today;
+    }
+
+    function isPast(dateStr, timeStr) {
+      const now = new Date();
+      const booking = new Date(dateStr + 'T' + (timeStr || '23:59') + ':00');
+      return booking < now;
+    }
+
+    function statusLabel(status) {
+      return status === 'cancelled' ? 'Отменена' : 'Новая';
+    }
+
+    async function fetchBookings(from, to) {
+      const params = new URLSearchParams();
+      if (from) params.set('from', from);
+      if (to) params.set('to', to);
+
+      const qs = params.toString();
+      const url = '/api/bookings' + (qs ? '?' + qs : '');
+
+      const response = await fetch(url, { headers: authHeaders() });
+
+      if (response.status === 401) {
+        clearToken();
+        showLogin(true);
+        throw new Error('Unauthorized');
+      }
+
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err.error || 'Ошибка загрузки');
+      }
+
+      const data = await response.json();
+      return data.bookings || [];
+    }
+
+    function renderBookings(bookings) {
+      bookingsBody.innerHTML = '';
+      loadingState.classList.add('hidden');
+
+      if (!bookings.length) {
+        bookingsTable.classList.add('hidden');
+        emptyState.classList.remove('hidden');
+        statsText.textContent = '0 записей';
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      bookingsTable.classList.remove('hidden');
+
+      const active = bookings.filter((b) => b.status !== 'cancelled').length;
+      statsText.textContent = `${bookings.length} записей · ${active} активных`;
+
+      let lastDate = null;
+
+      for (const booking of bookings) {
+        if (booking.date !== lastDate) {
+          lastDate = booking.date;
+          const groupRow = document.createElement('tr');
+          groupRow.className = 'date-group';
+          const groupCell = document.createElement('td');
+          groupCell.colSpan = 7;
+          groupCell.textContent = formatDateLabel(booking.date);
+          if (isToday(booking.date)) {
+            groupCell.classList.add('today-label');
+            groupCell.textContent += ' · сегодня';
+          }
+          groupRow.appendChild(groupCell);
+          bookingsBody.appendChild(groupRow);
+        }
+
+        const tr = document.createElement('tr');
+        const past = isPast(booking.date, booking.time);
+        const cancelled = booking.status === 'cancelled';
+
+        if (past) tr.classList.add('row-past');
+        if (isToday(booking.date) && !cancelled) tr.classList.add('row-today');
+        if (cancelled) tr.classList.add('row-cancelled');
+
+        tr.innerHTML = `
+          <td class="mono" data-label="Дата">${booking.date}</td>
+          <td class="mono" data-label="Время">${booking.time}</td>
+          <td data-label="Услуга">${escapeHtml(booking.service)}</td>
+          <td data-label="Имя">${escapeHtml(booking.name)}</td>
+          <td class="mono" data-label="Telegram">${escapeHtml(booking.telegram)}</td>
+          <td data-label="Статус">
+            <span class="status ${cancelled ? 'status-cancelled' : 'status-new'}">${statusLabel(booking.status)}</span>
+          </td>
+          <td data-label="">
+            <button type="button" class="btn btn-danger btn-cancel" data-id="${booking.id}" ${cancelled ? 'disabled' : ''}>
+              ${cancelled ? 'Отменена' : 'Отменить'}
+            </button>
+          </td>
+        `;
+
+        bookingsBody.appendChild(tr);
+      }
+
+      bookingsBody.querySelectorAll('.btn-cancel:not(:disabled)').forEach((btn) => {
+        btn.addEventListener('click', () => cancelBooking(btn.dataset.id, btn));
+      });
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    async function loadBookings() {
+      loadingState.classList.remove('hidden');
+      bookingsTable.classList.add('hidden');
+      emptyState.classList.add('hidden');
+
+      try {
+        const bookings = await fetchBookings(filterFrom.value, filterTo.value);
+        renderBookings(bookings);
+      } catch (err) {
+        if (err.message !== 'Unauthorized') {
+          loadingState.classList.add('hidden');
+          alert('Не удалось загрузить записи: ' + err.message);
+        }
+      }
+    }
+
+    async function cancelBooking(id, btn) {
+      if (!confirm('Отменить эту запись?')) return;
+
+      btn.disabled = true;
+      btn.textContent = '...';
+
+      try {
+        const response = await fetch('/api/bookings?id=' + encodeURIComponent(id), {
+          method: 'DELETE',
+          headers: authHeaders(),
+        });
+
+        if (response.status === 401) {
+          clearToken();
+          showLogin(true);
+          return;
+        }
+
+        if (!response.ok) {
+          const err = await response.json().catch(() => ({}));
+          throw new Error(err.error || 'Ошибка отмены');
+        }
+
+        await loadBookings();
+      } catch (err) {
+        alert('Не удалось отменить: ' + err.message);
+        btn.disabled = false;
+        btn.textContent = 'Отменить';
+      }
+    }
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const token = adminTokenInput.value.trim();
+      if (!token) return;
+
+      setToken(token);
+      showDashboard();
+
+      try {
+        await loadBookings();
+      } catch {
+        /* 401 обработан в fetchBookings */
+      }
+    });
+
+    btnLogout.addEventListener('click', () => {
+      clearToken();
+      showLogin(false);
+    });
+
+    btnFilter.addEventListener('click', loadBookings);
+    btnResetFilter.addEventListener('click', () => {
+      filterFrom.value = '';
+      filterTo.value = '';
+      loadBookings();
+    });
+
+    if (getToken()) {
+      showDashboard();
+      loadBookings();
+    }
+  </script>
+</body>
+</html>
