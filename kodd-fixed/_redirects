@@ -1,0 +1,2 @@
+# API routes to serverless functions
+/api/*  /.netlify/functions/:splat  200
