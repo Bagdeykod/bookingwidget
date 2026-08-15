@@ -462,15 +462,13 @@ function buildMessage({ service, date, time, name, telegram }) {
 Если у вас есть вопросы или предложения:
 
 - **GitHub Issues:** [открыть issue](https://github.com/ваш-username/booking-widget/issues)
-- **Email:** your.email@example.com
-- **Telegram:** @your_username
+  
 
 ---
 
 ## 🙏 Благодарности
 
 - [Vercel](https://vercel.com/) — за serverless-инфраструктуру и бесплатный хостинг
-- [Telegram Bot API](https://core.telegram.org/bots/api) — за мощный API для ботов
 - Сообществу открытого ПО за вдохновение и поддержку
 
 ---
