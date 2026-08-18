@@ -35,19 +35,12 @@
 ### Скриншоты
 
 **Виджет записи (index.html):**
-```
-[Добавьте скриншот виджета записи]
-```
 
-**Админ-панель (admin.html):**
-```
-[Добавьте скриншот админ-панели со списком записей]
-```
+![Виджет записи](docs/images/booking-widget.png)
 
-**Уведомление в Telegram:**
-```
-[Добавьте скриншот сообщения от бота в Telegram]
-```
+**Подтверждение записи с уведомлением в Telegram:**
+
+![Подтверждение записи](docs/images/booking-confirmation.png)
 
 ### 🔗 Live Demo
 
@@ -462,13 +455,22 @@ function buildMessage({ service, date, time, name, telegram }) {
 Если у вас есть вопросы или предложения:
 
 - **GitHub Issues:** [открыть issue](https://github.com/ваш-username/booking-widget/issues)
+<<<<<<< HEAD
   
+=======
+- **Email:** your.email@example.com
+- **Telegram:** @your_username
+>>>>>>> 1110c24 (Add screenshots to README)
 
 ---
 
 ## 🙏 Благодарности
 
 - [Vercel](https://vercel.com/) — за serverless-инфраструктуру и бесплатный хостинг
+<<<<<<< HEAD
+=======
+- [Telegram Bot API](https://core.telegram.org/bots/api) — за мощный API для ботов
+>>>>>>> 1110c24 (Add screenshots to README)
 - Сообществу открытого ПО за вдохновение и поддержку
 
 ---
